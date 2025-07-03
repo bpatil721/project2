@@ -1,0 +1,14 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch"
+    },
+    "devDependencies": {
+        "axios": "^1.6.4",
+        "laravel-mix": "^6.0.49",
+        "laravel-vite-plugin": "^1.0",
+        "vite": "^5.0"
+    }
+}
