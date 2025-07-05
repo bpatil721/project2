@@ -52,9 +52,10 @@ class TwoFactorController extends Controller
         $user = Auth::guard('user')->user();
         $secret = session('2fa_secret');
         $google2fa = app('pragmarx.google2fa');
-
+        
         if ($google2fa->verifyKey($secret, $request->otp)) {
             $user->google2fa_secret = $secret;
+            $user->two_fa_status = 1;
             $user->save();
 
             return redirect()->route('dashboard')->with('success', '2FA enabled!');
@@ -95,10 +96,36 @@ class TwoFactorController extends Controller
         }
 
         $user->google2fa_secret = null;
+        $user->two_fa_status = 0;
         $user->save();
 
         session()->forget('google2fa_passed');
 
         return redirect()->route('dashboard')->with('success', '2FA has been disabled.');
+    }
+    public function verify(Request $request)
+    {
+       return view('auth.2fa_verify');
+    }
+    public function postVerify(Request $request)
+    {
+        $request->validate([
+            'one_time_password' => 'required|digits:6',
+        ]);
+
+        $user = Auth::guard('user')->user();
+        if (!$user->google2fa_secret) {
+            return redirect()->route('dashboard')->with('error', '2FA is not enabled.');
+        }
+        $google2fa = app('pragmarx.google2fa');
+
+        if ($google2fa->verifyKey($user->google2fa_secret, $request->one_time_password)) {
+            $user->two_fa_status = 1;
+            $user->save();
+
+
+            return redirect()->route('dashboard')->with('success', '2FA enabled!');
+        }
+        return back()->with('error', 'Invalid OTP, please try again.');
     }
 }

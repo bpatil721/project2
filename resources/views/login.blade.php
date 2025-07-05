@@ -15,12 +15,12 @@
                         @csrf
                         <div class="col-md-6">
                             <label for="email">Email</label>
-                            <input type="text" name="email" id="email" class="form-control">
+                            <input type="text" name="email" id="email" class="form-control" value="t@t.com">
                         
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="password">Password</label>
-                            <input type="text" name="password" id="password" class="form-control">
+                            <input type="text" name="password" id="password" class="form-control" value="123">
                         </div>
                         <div class="col-md-6 form-group">
                                 <button type="button" id="login">Submit</button>
@@ -39,7 +39,7 @@
                 res = await submitAjax(url,data,'POST')
                 if(res.status){
                     toastr.success(res.msg)
-                    window.location.href =`{{route('dashboard')}}`
+                    window.location.href = res.url
                 }else{
                     toastr.error(res.msg)
                 }

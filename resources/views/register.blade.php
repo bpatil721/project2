@@ -43,6 +43,7 @@
             console.log(res);
             if(res.status){
                 toastr.success(res.msg)
+                window.location.href =`{{route('login')}}`
             }else{
                 toastr.error(res.msg)
             }

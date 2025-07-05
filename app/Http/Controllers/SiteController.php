@@ -13,7 +13,7 @@ class SiteController extends Controller
 {
     public function  getLogin() {
         if(Auth::guard('user')->check()){
-            return view('dashboard');
+            return redirect()->route('dashboard');
         }
         return view('login');
     }
@@ -24,6 +24,7 @@ class SiteController extends Controller
             $user = Auth::guard('user')->user();
             $res['status'] = 1;
             $res['msg'] = 'Login successfully';
+            $res['url'] = ($user->google2fa_secret)?route('2fa-verify'):route('dashboard');
             return response()->json($res);
         }else{
             return response()->json(['status' =>false,'msg'=>'Invalid creaditon']);
@@ -54,8 +55,12 @@ class SiteController extends Controller
         return view('product',compact('categories'));
     }
     public function postLogout(Request $request){
-        if(Auth::guard('user')->user()){
+        $user = Auth::guard('user')->user();
+        if($user){
+            $user->two_fa_status = 0;
+            $user->save();
             Auth::guard('user')->logout();
+            
             return response()->json(['status'=>true,'msg'=>'Logout Successfully']);
         }else{
             return response()->json(['status'=>false,'msg'=>'Something went to wrong']);

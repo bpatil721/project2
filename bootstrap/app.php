@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'userAuth'=> \App\Http\Middleware\UserAuth::class,
-            '2fa'=> \PragmaRX\Google2FALaravel\Middleware::class,
+            '2fa'=> \App\Http\Middleware\TwoFactorAuth::class //\PragmaRX\Google2FALaravel\Middleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
